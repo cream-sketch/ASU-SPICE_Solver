@@ -3,9 +3,9 @@
 
 This repository contains two Python scripts for solving SPICE netlist files to determine node voltages in electrical circuits. The solvers use nodal analysis to construct a system of linear equations in the form $$G \cdot V = J$$, where:
 
-- \( G \) is the conductance matrix,
-- \( V \) is the vector of node voltages, and
-- \( J \) is the vector of current sources.
+-  G is the conductance matrix,
+-  V  is the vector of node voltages, and
+-  J  is the vector of current sources.
 
 The system is then solved using either dense or sparse matrix techniques depending on the script.
 
