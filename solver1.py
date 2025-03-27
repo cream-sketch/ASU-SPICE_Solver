@@ -1,8 +1,7 @@
 import numpy as np
 
-
 def parse_spice_netlist(filename):
-
+    """Parse a SPICE netlist file and return the list of components and set of nodes."""
     components = []
     nodes = set()
 
@@ -14,53 +13,52 @@ def parse_spice_netlist(filename):
             parts = line.split()
             component_type = parts[0][0].upper()
             if component_type == 'R':
-                # R<name> <node1> <node2> <value>
+                # Resistor: R<name> <node1> <node2> <value>
                 node1, node2, value = parts[1], parts[2], float(parts[3])
                 components.append(('R', node1, node2, value))
                 nodes.add(node1)
                 nodes.add(node2)
             elif component_type == 'I':
-                # I<name> <node1> <node2> <value>
+                # Current source: I<name> <node1> <node2> <value>
                 node1, node2, value = parts[1], parts[2], float(parts[3])
                 components.append(('I', node1, node2, value))
                 nodes.add(node1)
                 nodes.add(node2)
             elif component_type == 'V':
-                # V<name> <node1> <node2> <value>
+                # Voltage source: V<name> <node1> <node2> <value>
                 node1, node2, value = parts[1], parts[2], float(parts[3])
                 components.append(('V', node1, node2, value))
                 nodes.add(node1)
                 nodes.add(node2)
 
-
+    # Remove the ground node '0'
     if '0' in nodes:
         nodes.remove('0')
-    nodes = sorted(list(nodes))
+    nodes = sorted(list(nodes))  # Sort nodes by name
     return components, nodes
 
-
 def build_system(components, nodes):
-    """ G & J"""
-    n = len(nodes)  # 节点数量
-    num_voltage_sources = sum(1 for c in components if c[0] == 'V')
-    total_unknowns = n + num_voltage_sources  # 总未知量（节点电压 + 电压源电流）
+    """Build the G matrix and J vector."""
+    n = len(nodes)  # Number of nodes
+    num_voltage_sources = sum(1 for c in components if c[0] == 'V')  # Count voltage sources
+    total_unknowns = n + num_voltage_sources  # Total unknowns (node voltages + voltage source currents)
 
-    G = np.zeros((total_unknowns, total_unknowns))
-    J = np.zeros(total_unknowns)
+    G = np.zeros((total_unknowns, total_unknowns))  # Initialize G matrix
+    J = np.zeros(total_unknowns)  # Initialize J vector
 
-    # 节点到索引的映射
+    # Map nodes to indices
     node_index = {node: idx for idx, node in enumerate(nodes)}
 
-    # 电压源计数器
-    vs_index = n  # 电压源电流的索引从 n 开始
+    # Counter for voltage source currents
+    vs_index = n  # Index for voltage source currents starts at n
 
     for component in components:
         c_type = component[0]
 
         if c_type == 'R':
-            # 电阻
+            # Resistor
             _, node1, node2, value = component
-            g = 1 / value  # 电导
+            g = 1 / value  # Conductance
             if node1 != '0' and node2 != '0':
                 i, j = node_index[node1], node_index[node2]
                 G[i][i] += g
@@ -75,17 +73,17 @@ def build_system(components, nodes):
                 G[j][j] += g
 
         elif c_type == 'I':
-            # 电流源
+            # Current source
             _, node1, node2, value = component
             if node1 != '0':
                 i = node_index[node1]
-                J[i] -= value  # 流出
+                J[i] -= value  # Outflow
             if node2 != '0':
                 j = node_index[node2]
-                J[j] += value  # 流入
+                J[j] += value  # Inflow
 
         elif c_type == 'V':
-            # 电压源
+            # Voltage source
             _, node1, node2, value = component
             if node1 != '0':
                 i = node_index[node1]
@@ -100,22 +98,20 @@ def build_system(components, nodes):
 
     return G, J, nodes
 
-
 def solve_circuit(filename):
-    """求解电路的节点电压"""
+    """Solve for node voltages in the circuit."""
     components, nodes = parse_spice_netlist(filename)
     G, J, nodes = build_system(components, nodes)
 
-    # 求解 G * V = J
+    # Solve the system G * V = J
     V = np.linalg.solve(G, J)
 
-    # 输出节点电压
+    # Print node voltages
     print(f"\nResults for {filename}:")
     for i, node in enumerate(nodes):
         print(f"Voltage at {node}: {V[i]:.3f} V")
 
-
-# 测试两个电路
+# Test the circuits
 solve_circuit('circuit1.sp')
 solve_circuit('circuit2.sp')
 solve_circuit('circuit3.sp')
