@@ -114,4 +114,3 @@ def solve_circuit(filename):
 # Test the circuits
 solve_circuit('circuit1.sp')
 solve_circuit('circuit2.sp')
-solve_circuit('circuit3.sp')
