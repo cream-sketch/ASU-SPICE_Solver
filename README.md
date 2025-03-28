@@ -27,5 +27,6 @@ To run the scripts, you need to have the following Python libraries installed:
 
 - `numpy`
 - `scipy`
-- ## Algorithm
+
+## Algorithm
 ![image](https://github.com/user-attachments/assets/9e76e71e-c8b2-49f6-b2a4-f82ebadc0c1f)
