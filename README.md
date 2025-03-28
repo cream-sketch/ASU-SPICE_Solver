@@ -27,6 +27,9 @@ To run the scripts, you need to have the following Python libraries installed:
 
 - `numpy`
 - `scipy`
+## Sanity Check
+![image](https://github.com/user-attachments/assets/d36328be-d2e9-4caa-a757-ba24a1f11a7b)
+
 
 ## Algorithm
 ![image](https://github.com/user-attachments/assets/9e76e71e-c8b2-49f6-b2a4-f82ebadc0c1f)
