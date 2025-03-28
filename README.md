@@ -7,7 +7,7 @@ This repository contains two Python scripts for solving SPICE netlist files to d
 -  V  is the vector of node voltages, and
 -  J  is the vector of current sources.
 
-The system is then solved using either dense or sparse matrix techniques depending on the script.
+Depending on the script, the system is then solved using either dense or sparse matrix techniques.
 
 - **`solver1.py`**: Solves simple circuit examples (`circuit1.sp` and `circuit2.sp`) using a dense matrix approach.
 - **`solver2.py`**: Solves large-scale SPICE files from the [link](https://github.com/ASU-VDA-Lab/ML-for-IR-drop/tree/main/benchmarks/real-circuit-data) dataset using a sparse matrix approach to handle memory constraints.
