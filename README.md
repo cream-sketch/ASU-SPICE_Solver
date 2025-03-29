@@ -21,12 +21,6 @@ The results for all processed SPICE files are saved in `results.txt`.
 - `solver2.py`: Python script to solve large-scale SPICE files using a sparse matrix approach.
 - `results.txt`: Output file containing the node voltages for all processed SPICE files.
 
-## Prerequisites
-
-To run the scripts, you need to have the following Python libraries installed:
-
-- `numpy`
-- `scipy`
 ## Sanity Check
 ![image](https://github.com/user-attachments/assets/d36328be-d2e9-4caa-a757-ba24a1f11a7b)
 
